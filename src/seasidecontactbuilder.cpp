@@ -72,6 +72,8 @@
 #include <QString>
 #include <QList>
 
+#include <QDebug>
+
 namespace {
 
 QContactFetchHint basicFetchHint()

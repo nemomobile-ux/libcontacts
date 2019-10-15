@@ -1,6 +1,6 @@
 Name:       libcontacts-qt5
 Summary:    Nemo contact cache library
-Version:    0.2.6
+Version:    0.3
 Release:    1
 Group:      System/Libraries
 License:    BSD
@@ -9,7 +9,6 @@ Source0:    %{name}-%{version}.tar.bz2
 Requires:   qtcontacts-sqlite-qt5
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Test)
-BuildRequires:  pkgconfig(Qt5Contacts)
 BuildRequires:  pkgconfig(Qt5Versit)
 BuildRequires:  pkgconfig(mlite5)
 BuildRequires:  pkgconfig(mlocale5)
@@ -17,6 +16,9 @@ BuildRequires:  pkgconfig(mce)
 BuildRequires:  pkgconfig(qtcontacts-sqlite-qt5-extensions) >= 0.2.31
 BuildRequires:  qt5-qttools
 BuildRequires:  qt5-qttools-linguist
+#Because pkgconfig QtContacts always return 5.0.0 use packages version
+BuildRequires:  qt5-qtpim-contacts-devel >= 5.8
+Requires: qt5-qtpim-contacts >= 5.8
 
 %description
 %{summary}.
@@ -40,7 +42,7 @@ Requires:   %{name} = %{version}-%{release}
 
 %package ts-devel
 Summary: Translation source for libcontacts
-Group: System/Applications
+Group: Development/Languages
 
 %description ts-devel
 Translation source for libcontacts
@@ -70,7 +72,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{_libdir}/libcontactcache-qt5.so*
+%{_libdir}/libcontactcache-qt5.so.*
 %{_datadir}/translations/libcontacts_eng_en.qm
 
 %files tests
@@ -80,4 +82,5 @@ rm -rf %{buildroot}
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/contactcache-qt5/*
+%{_libdir}/libcontactcache-qt5.so
 %{_libdir}/pkgconfig/contactcache-qt5.pc

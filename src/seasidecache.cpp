@@ -1716,11 +1716,7 @@ void SeasideCache::startRequest(bool *idleProcessing)
             requestPending = true;
         } else {
             QContactId aggregateId = m_contactsToFetchConstituents.first();
-
-            // Find the constituents of this contact
-            QContact first;
-            first.setId(aggregateId);
-            m_relationshipsFetchRequest.setFirst(first);
+            m_relationshipsFetchRequest.setFirst(aggregateId);
             m_relationshipsFetchRequest.setRelationshipType(QContactRelationship::Aggregates());
             m_relationshipsFetchRequest.start();
         }
@@ -2563,7 +2559,7 @@ void SeasideCache::relationshipsAvailable()
 
     foreach (const QContactRelationship &rel, m_relationshipsFetchRequest.relationships()) {
         if (rel.relationshipType() == aggregatesRelationship) {
-            m_constituentIds.insert(apiId(rel.second()));
+            m_constituentIds.insert(rel.second());
         }
     }
 }
@@ -2776,7 +2772,7 @@ void SeasideCache::requestStateChanged(QContactAbstractRequest::State state)
         }
 
         foreach (const QContactRelationship &relationship, relationships) {
-            m_aggregatedContacts.insert(SeasideCache::apiId(relationship.first()));
+            m_aggregatedContacts.insert(relationship.first());
         }
 
         if (completed) {
@@ -2836,13 +2832,14 @@ void SeasideCache::requestStateChanged(QContactAbstractRequest::State state)
                 QContactRelationshipFetchRequest *rfr = new QContactRelationshipFetchRequest(this);
                 rfr->setManager(m_saveRequest.manager());
                 rfr->setRelationshipType(QContactRelationship::Aggregates());
-                rfr->setSecond(c);
+                rfr->setSecond(c.id());
+
                 connect(rfr, &QContactAbstractRequest::stateChanged, this, [this, c, rfr] {
                     if (rfr->state() == QContactAbstractRequest::FinishedState) {
                         rfr->deleteLater();
                         if (rfr->relationships().size()) {
-                            const quint32 constituentId = internalId(apiId(rfr->relationships().at(0).second()));
-                            const quint32 aggregateId = internalId(apiId(rfr->relationships().at(0).first()));
+                            const quint32 constituentId = internalId(rfr->relationships().at(0).second());
+                            const quint32 aggregateId = internalId(rfr->relationships().at(0).first());
                             this->notifySaveContactComplete(constituentId, aggregateId);
                         } else {
                             // error: cannot retrieve aggregate for newly created constituent.
@@ -3355,13 +3352,10 @@ int SeasideCache::contactIndex(quint32 iid, FilterType filterType)
 
 QContactRelationship SeasideCache::makeRelationship(const QString &type, const QContactId &id1, const QContactId &id2)
 {
-    QContact first, second;
-    first.setId(id1);
-    second.setId(id2);
     QContactRelationship relationship;
     relationship.setRelationshipType(type);
-    relationship.setFirst(first);
-    relationship.setSecond(second);
+    relationship.setFirst(id1);
+    relationship.setSecond(id2);
     return relationship;
 }
 

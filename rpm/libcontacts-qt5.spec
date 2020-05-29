@@ -2,9 +2,8 @@ Name:       libcontacts-qt5
 Summary:    Nemo contact cache library
 Version:    0.3
 Release:    1
-Group:      System/Libraries
 License:    BSD
-URL:        https://github.com/nemomobile/libcontacts
+URL:        https://git.sailfishos.org/mer-core/libcontacts
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   qtcontacts-sqlite-qt5
 BuildRequires:  pkgconfig(Qt5Core)
@@ -25,16 +24,14 @@ Requires: qt5-qtpim-contacts >= 5.8
 %{summary}.
 
 %package tests
-Summary:    Nemo contact cache library tests
-Group:      System/Libraries
+Summary:    Sailfish OS contact cache library tests
 Requires:   %{name} = %{version}-%{release}
 
 %description tests
 %{summary}.
 
 %package devel
-Summary:    Nemo contact cache library headers
-Group:      System/Libraries
+Summary:    Sailfish OS contact cache library headers
 Requires:   %{name} = %{version}-%{release}
 
 %description devel
@@ -59,7 +56,7 @@ Translation source for libcontacts
 
 %build
 
-%qmake5 VERSION=%{version}
+%qmake5 VERSION=%{version} "PKGCONFIG_LIB=%{_lib}"
 
 make %{?_smp_mflags}
 

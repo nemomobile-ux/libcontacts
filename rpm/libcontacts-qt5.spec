@@ -18,6 +18,7 @@ BuildRequires:  qt5-qttools
 BuildRequires:  qt5-qttools-linguist
 #Because pkgconfig QtContacts always return 5.0.0 use packages version
 BuildRequires:  qt5-qtpim-contacts-devel >= 5.8
+BuildRequires:  pkgconfig(protobuf)
 Requires: qt5-qtpim-contacts >= 5.8
 
 %description
